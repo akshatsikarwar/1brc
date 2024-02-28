@@ -31,11 +31,25 @@ int main(int argc, char **argv)
         char *b = buf;
         while (b < buf + n) {
             ++lines;
-            char *sep = strstr(b, ";");
+            char *sep = strchr(b, ';');
             std::string town(b, sep);
-            char *nl;
-            float temp = strtof(sep + 1, &nl);
-            b = nl + 1;
+            ++sep; //;
+            int bias = 1;
+            if (*sep == '-') {
+                bias = -1;
+                ++sep; //-
+            }
+            int val = *sep - '0';
+            ++sep;
+            if (*sep != '.') {
+                val *= 10;
+                val += (*sep - '0');
+                ++sep;
+            }
+            ++sep; //.
+            int frac = *sep - '0';
+            float temp = ((val * 10 + frac) * bias) / 10.0;
+            b = sep + 2; // new line
             auto t = map.find(town);
             if (t == map.end()) {
                 ++towns;
