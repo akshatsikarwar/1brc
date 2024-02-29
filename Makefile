@@ -1,3 +1,3 @@
-CXXFLAGS += -O9
-run: speed
+CXXFLAGS = -O9 -pthread
+run:speed
 	./speed measurements.txt
