@@ -12,11 +12,11 @@
 #include <unistd.h>
 #include <vector>
 struct data {
-    float min;
-    float max;
-    float sum;
+    int min;
+    int max;
+    int64_t sum;
     int count;
-    data(float t) : min(t), max(t), sum(t), count(1) {}
+    data(int t) : min(t), max(t), sum(t), count(1) {}
 };
 int fd;
 static int prev_newline(off_t offset)
@@ -73,7 +73,7 @@ static void *thd(void *ptr)
             }
             ++sep; //.
             int frac = *sep - '0';
-            float temp = ((val * 10 + frac) * bias) / 10.0;
+            int temp = ((val * 10 + frac) * bias);
             b = sep + 2; // new line
             auto t = arg->map.find(town);
             if (t == arg->map.end()) {
@@ -139,7 +139,7 @@ int main(int argc, char **argv)
     const char *comma = "{";
     for (const auto & v : vals) {
         const auto &d = v.second;
-        printf("%s%s=%.1f/%.1f/%.1f", comma, v.first.c_str(), d.min, d.sum / d.count, d.max);
+        printf("%s%s=%.1f/%.1f/%.1f", comma, v.first.c_str(), d.min / 10.0, d.sum / (10.0 * d.count), d.max / 10.0);
         comma = ", ";
     }
     puts("}");
